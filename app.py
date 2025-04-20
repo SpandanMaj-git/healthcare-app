@@ -1,10 +1,13 @@
 from flask import Flask
+from flask_bcrypt import Bcrypt
 from config import Config
 from models import db
 from flask_jwt_extended import JWTManager
 from auth.routes import auth_bp
 
+
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 
 app.config.from_object(Config)
 
@@ -21,7 +24,7 @@ if __name__ == "__main__":
 
 
 
-#############################################################
+
 
 
 
