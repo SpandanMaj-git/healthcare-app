@@ -1,7 +1,9 @@
 from flask import Blueprint, request, jsonify
-from models import db, User
-from app import bcrypt
+from models import User
+from extensions import db, bcrypt
 from flask_jwt_extended import create_access_token
+
+
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -17,7 +19,7 @@ def register():
     if existing_user:
         return jsonify({'error': 'Email already registered'})
     
-    hashed_pw = bcrypt.generate_password_hash(data["passwword"]).decode('utf-8')
+    hashed_pw = bcrypt.generate_password_hash(data["password"]).decode('utf-8')
     new_user = User(email = data['email'], password = hashed_pw, role = data['role'])
     db.session.add(new_user)
     db.session.commit()

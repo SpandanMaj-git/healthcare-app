@@ -1,6 +1,5 @@
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
+from extensions import db
+from datetime import datetime
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key = True)
@@ -10,3 +9,13 @@ class User(db.Model):
     is_approved = db.Column(db.Boolean, default=False)
 
 
+class Appointment(db.Model):
+    id = db.Column(db.Integer, primary_key = True)
+    doctor_id = db.Column(db.Integer, db.ForeignKey('user.id', nullable = False))
+    patient_id = db.Column(db.Integer, db.ForeignKey('user.id', nullable = False))
+    date = db.Column(db.DateTime, nullable = False)
+    reason = db.Column(db.String(255))
+    status = db.Column(db.String(20), default = "Scheduled") #scheduled, cancelled, completed
+
+    doctor = db.relationship('User', foreign_keys=[doctor_id], backref='pattient_appointments')
+    patient = db.relationship('User', foreign_keys=[patient_id], backref = 'doctor_appointments')
