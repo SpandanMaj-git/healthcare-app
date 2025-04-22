@@ -6,7 +6,8 @@ from datetime import datetime
 
 appointments_bp = Blueprint('appointments', __name__)
 
-@appointments_bp.route('/book', methods = "POST")
+@appointments_bp.route('/book', methods =["POST"])
+@jwt_required
 def book_appointments():
     data = request.get_json()
     current_user = get_jwt_identity()
@@ -21,7 +22,7 @@ def book_appointments():
         date = datetime.strptime(data['date'], '%Y-%m-%d').date(),
         time = datetime.strptime(data['time'], '%H:%M').time()
     )
-    db.session.add(current_user)
+    db.session.add(new_appt)
     db.session.commit()
 
     return jsonify({'message': 'appointment booked'})

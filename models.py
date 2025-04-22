@@ -17,5 +17,5 @@ class Appointment(db.Model):
     reason = db.Column(db.String(255))
     status = db.Column(db.String(20), default = "Scheduled") #scheduled, cancelled, completed
 
-    doctor = db.relationship('User', foreign_keys=[doctor_id], backref='pattient_appointments')
+    doctor = db.relationship('User', foreign_keys=[doctor_id], backref='patient_appointments')
     patient = db.relationship('User', foreign_keys=[patient_id], backref = 'doctor_appointments')

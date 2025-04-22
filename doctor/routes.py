@@ -7,7 +7,7 @@ doctor_bp = Blueprint('doctor', __name__)
 
 
 @doctor_bp.route('/dashboard')
-@jwt_required
+@jwt_required()
 def doctor_dashboard():
     user = get_jwt_identity()
     if user['role'] != 'doctor':
