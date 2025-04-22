@@ -1,25 +1,13 @@
 from flask import Blueprint, request, jsonify
 from models import db, User
 from app import bcrypt
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-
+from flask_jwt_extended import create_access_token
 
 auth_bp = Blueprint('auth', __name__)
-doctor_bp = Blueprint('doctor', __name__)
-
-
-@doctor_bp.route('/dashboard')
-@jwt_required
-def doctor_dashboard():
-    user = get_jwt_identity()
-    if user['role'] != 'doctor':
-        return jsonify({"error": "Unauthorized access"})
-    return jsonify({"message": "Welcome Doctor"})
-
 
 @auth_bp.route('/register', methods = ["POST"])
 def register():
-    data  = request.get_json
+    data  = request.get_json()
 
     if not data.get('email') or not data.get('password') or not data.get('role'):
         return jsonify({'error': 'Missing required fileds'})
