@@ -11,9 +11,10 @@ class User(db.Model):
 
 class Appointment(db.Model):
     id = db.Column(db.Integer, primary_key = True)
-    doctor_id = db.Column(db.Integer, db.ForeignKey('user.id', nullable = False))
-    patient_id = db.Column(db.Integer, db.ForeignKey('user.id', nullable = False))
-    date = db.Column(db.DateTime, nullable = False)
+    doctor_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+    patient_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
+    date = db.Column(db.Date, nullable = False)
+    time = db.Column(db.Time, nullable=False)
     reason = db.Column(db.String(255))
     status = db.Column(db.String(20), default = "Scheduled") #scheduled, cancelled, completed
 
