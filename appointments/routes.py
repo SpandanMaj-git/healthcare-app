@@ -56,6 +56,44 @@ def view_upcoming_appointments():
         "status": a.status
     } for a in appointments]), 200
 
+@appointments_bp.route("/appointments/<int:appt_id>/update", methods=["PUT"])
+@jwt_required()
+def update_appointment(appt_id):
+    user_id = get_jwt_identity()
+    user = User.query.get(user_id)
+    data = request.get_json()
+
+    appt = Appointment.query.get(appt_id)
+
+    if not appt:
+        return jsonify({"msg": "Appointment not found"}), 404
+    
+    if user.id not in [appt.patient_id, appt.doctor_id]:
+        return jsonify({"msg": "Unauthorized"}), 403
+
+    if "action" in data and data["action"] == "cancel":
+        appt.status = "cancelled"
+        db.session.commit()
+        return jsonify({"msg": "Appointment cancelled"}), 200
+
+    elif "new_datetime" in data:
+        new_time = datetime.fromisoformat(data["new_datetime"])
+        conflict = Appointment.query.filter_by(doctor_id=appt.doctor_id, datetime=new_time, status="confirmed").first()
+        if conflict:
+            return jsonify({"msg": "Time slot already booked"}), 409
+
+        appt.datetime = new_time
+        db.session.commit()
+        return jsonify({"msg": "Appointment rescheduled"}), 200
+
+    return jsonify({"msg": "Invalid request"}), 400
+
+    
+
+    
+    
+
+
 
 
 
